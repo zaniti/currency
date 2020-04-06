@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <style media="screen">
+    body{
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      background-color: #c7c7c7;
+      text-align: center;
+      font-family: monospace;
+    }
+    select{
+      font-family: inherit;
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+    }
+    input{
+      font-family: inherit;
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+    }
+  </style>
+  <body onload="Convert();">
+
+    <div id="box">
+      <h2>Currency Converter</h2>
+      <table>
+        <tr>
+          <td><input type="text" value="1" id="fromAmount" size="15" onkeyup="Convert();"></td>
+          <td>
+            <select id="from" onchange="Convert();">
+              <option value="MAD">Moroccan Dirham</option>
+              <option value="USD" selected>United States Dollar</option>
+              <option value="AUD">Australian Dollar</option>
+              <option value="CAD">Canadian Dollar</option>
+              <option value="EURO">Euro</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="text" id="toAmount" size="15" disabled></td>
+          <td>
+            <select id="to" onchange="Convert();">
+              <option value="MAD" selected>Moroccan Dirham</option>
+              <option value="USD">United States Dollar</option>
+              <option value="AUD">Australian Dollar</option>
+              <option value="CAD">Canadian Dollar</option>
+              <option value="EURO">Euro</option>
+            </select>
+          </td>
+        </tr>
+      </table>
+
+    </div>
+
+    <script type="text/javascript">
+
+      function Convert(){
+        let from = document.getElementById('from').value;
+        let to = document.getElementById('to').value;
+        var xmlhttp = new XMLHttpRequest();
+        var url = "http://data.fixer.io/api/latest?access_key=e05c672f9e5a01d24af6abeb29c8fa0e&symbols="+from+","+to;
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+        xmlhttp.onreadystatechange = function(){
+          if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            var result = xmlhttp.responseText;
+            var jsResult = JSON.parse(result);
+            var amm = document.getElementById('fromAmount').value;
+            var oneunit = jsResult.rates[to]/jsResult.rates[from];
+            document.getElementById('toAmount').value = (oneunit*amm).toFixed(2);
+          }
+        }
+      }
+
+    </script>
+
+  </body>
+</html>
